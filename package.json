@@ -6,9 +6,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint":"eslint ."
+    "lint": "eslint ."
   },
   "dependencies": {
+    "date-fns": "^2.19.0",
     "eslint": "^7.22.0",
     "eslint-config-handlebarlabs": "0.0.6",
     "expo": "~40.0.0",
