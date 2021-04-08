@@ -7,11 +7,16 @@ import {
   Dimensions,
   Text,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { format } from "date-fns";
+import { Entypo } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Button } from "./Button";
 import { ConversionInput } from "../components/ConversionInput";
 import colors from "../constants/colors";
+import { KeyboardSpacer } from "../components/KeyboardSpacer";
 
 const screen = Dimensions.get("window");
 const styles = StyleSheet.create({
@@ -20,7 +25,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingTop: screen.height * 0.2,
+    paddingTop: screen.height * 0.1,
   },
   logoContainer: {
     justifyContent: "center",
@@ -47,19 +52,39 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
   },
+  header: {
+    alignItems: "flex-end",
+    marginHorizontal: 20,
+    marginVertical: 20,
+  },
 });
 
-export default () => {
-  const baseCurrency = "USD";
-  const quoteCurrency = "GBP";
+export default ({ navigation }) => {
+  // const baseCurrency = "USD";
+  const [baseCurrency, setBaseCurrency] = useState("USD");
+  const [quoteCurrency, setQuoteCurrency] = useState("GBP");
+  const [value, setValue] = useState("100");
+  // const quoteCurrency = "GBP";
   const conversionRate = 0.835;
   const date = new Date();
+
+  const swapCurrencies = () => {
+    setBaseCurrency(quoteCurrency);
+    setQuoteCurrency(baseCurrency);
+  };
 
   const [scrollEnabled, setScrollEnabled] = useState(false);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.blue} />
+
+      <SafeAreaView style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.push("Options")}>
+          <Entypo name="cog" size={32} color={colors.white} />
+        </TouchableOpacity>
+      </SafeAreaView>
+
       <ScrollView scrollEnabled={scrollEnabled}>
         <View style={styles.content}>
           <View style={styles.logoContainer}>
@@ -76,16 +101,30 @@ export default () => {
           </View>
           <Text style={styles.textHeader}>Currency Convertor</Text>
           <ConversionInput
-            text="USD"
-            value="123"
-            onButtonPress={() => alert("todo")}
-            onChangeText={(text) => console.log("text", text)}
+            text={baseCurrency}
+            value={value}
+            onButtonPress={() =>
+              navigation.push("CurrencyList", {
+                title: "Base Currency",
+                activeCurrency: baseCurrency,
+                onChange: (currency) => setBaseCurrency(currency),
+              })
+            }
+            onChangeText={(text) => setValue(text)}
             keyboardType="numeric"
           />
           <ConversionInput
-            text="GBP"
-            value="123"
-            onButtonPress={() => alert("todo")}
+            text={quoteCurrency}
+            value={
+              value && `${(parseFloat(value) * conversionRate).toFixed(2)}`
+            }
+            onButtonPress={() =>
+              navigation.push("CurrencyList", {
+                title: "Quote Currency",
+                activeCurrency: quoteCurrency,
+                onChange: (currency) => setQuoteCurrency(currency),
+              })
+            }
             editable={false}
           />
           <Text style={styles.text}>
@@ -95,7 +134,12 @@ export default () => {
             )}`}
           </Text>
 
-          <Button text="Reverse Currencies" onPress={() => alert("todo")} />
+          <Button text="Reverse Currencies" onPress={() => swapCurrencies()} />
+          <KeyboardSpacer
+            onToggle={(keyboardIsVisible) =>
+              setScrollEnabled(keyboardIsVisible)
+            }
+          />
         </View>
       </ScrollView>
     </View>

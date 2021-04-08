@@ -1,5 +1,11 @@
 import React from "react";
-import { ScrollView, SafeAreaView, Linking, Alert } from "react-native";
+import {
+  ScrollView,
+  SafeAreaView,
+  Linking,
+  Alert,
+  StatusBar,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import colors from "../constants/colors";
 import { RowItem, RowSeparator } from "../components/RowItem";
@@ -12,7 +18,8 @@ const openUrl = (url) => {
 
 export default () => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "lightblue" }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <ScrollView>
         <RowItem
           onPress={() => openUrl("https://github.com")}
