@@ -60,11 +60,9 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation }) => {
-  // const baseCurrency = "USD";
   const [baseCurrency, setBaseCurrency] = useState("USD");
   const [quoteCurrency, setQuoteCurrency] = useState("GBP");
   const [value, setValue] = useState("100");
-  // const quoteCurrency = "GBP";
   const conversionRate = 0.835;
   const date = new Date();
 
